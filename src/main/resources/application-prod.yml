@@ -1,0 +1,13 @@
+spring:
+  config:
+    import: optional:file./authorization-service/.env[.properties]
+    activate:
+      on-profile: prod
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/user?serverTimeZone=Asia/Seoul
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+server:
+  port: ${PROD_PORT:8020}
