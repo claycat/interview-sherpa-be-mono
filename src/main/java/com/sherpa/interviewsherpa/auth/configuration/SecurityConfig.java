@@ -28,12 +28,22 @@ public class SecurityConfig {
 			.csrf(AbstractHttpConfigurer::disable)
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
-			.authorizeRequests(authorizeRequests -> authorizeRequests
+			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/login", "/error", "/webjars/**", "/ws/**").permitAll()
-				.anyRequest().authenticated())
+				.anyRequest().authenticated()
+			)
 			.oauth2Login(oauth -> oauth
 				.defaultSuccessUrl("/signin/success", true)
-				.failureUrl("/signin/failure"));
+				.failureUrl("/login?error=true"))
+			.logout(logout -> logout
+				.logoutUrl("/logout")
+				.logoutSuccessUrl("/home")
+				.permitAll()
+			)
+			.sessionManagement(sessionManagement -> sessionManagement
+				.maximumSessions(1)
+				.expiredUrl("/login?expired=true")
+			);
 		return http.build();
 	}
 

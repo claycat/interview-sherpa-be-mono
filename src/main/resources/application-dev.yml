@@ -48,6 +48,12 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-key-expiration-s: ${ACCESS_KEY_EXPIRATION_S}
 
+url:
+  client: ${CLIENT_URL}
 
 server:
   port: ${DEV_PORT:8888}
+  servlet:
+    session:
+      timeout: 30m
+    context-path: /api

@@ -1,4 +1,4 @@
-package com.sherpa.interviewsherpa.flow.application.port.in.dto;
+package com.sherpa.interviewsherpa.flow.application.port.in.dto.createflow;
 
 import java.util.UUID;
 
@@ -9,10 +9,10 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor(force = true)
-public class FlowRequestCommand {
+public class CreateFlowResult {
 	private final UUID flowId;
 
-	public FlowRequestCommand(UUID flowId) {
+	public CreateFlowResult(UUID flowId) {
 		this.flowId = flowId;
 	}
 }

@@ -34,7 +34,7 @@ public class MemberPersistenceAdapter implements LoadOAuthMemberPort, SaveOAuthM
 	}
 
 	@Override
-	public void saveOAuthMember(Member member) {
-		memberRepository.save(memberMapper.mapToJpaEntity(member));
+	public Member saveOAuthMember(Member member) {
+		return memberMapper.mapToDomainEntity(memberRepository.save(memberMapper.mapToJpaEntity(member)));
 	}
 }
