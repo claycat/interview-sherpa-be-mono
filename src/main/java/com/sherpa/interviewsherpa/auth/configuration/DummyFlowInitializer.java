@@ -86,8 +86,6 @@ public class DummyFlowInitializer implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		var flow = objectMapper.readValue(flowString, Flow.class);
 
-		System.out.println("flow.toString() = " + flow.toString());
-
 		FlowJpaEntity flowEntity = new FlowJpaEntity(flow);
 		flowRepository.save(flowEntity);
 	}

@@ -4,5 +4,5 @@ import com.sherpa.interviewsherpa.member.domain.Member;
 
 public interface SaveOAuthMemberPort {
 
-	void saveOAuthMember(Member member);
+	Member saveOAuthMember(Member member);
 }

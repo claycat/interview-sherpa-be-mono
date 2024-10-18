@@ -5,7 +5,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.sherpa.interviewsherpa.auth.application.port.in.OAuthSignInMemberCommand;
 import com.sherpa.interviewsherpa.auth.application.port.in.OAuthSignInMemberResult;
 import com.sherpa.interviewsherpa.auth.application.port.in.OAuthSignInMemberUseCase;
-import com.sherpa.interviewsherpa.auth.application.service.jwt.JwtHelper;
 import com.sherpa.interviewsherpa.common.annotation.UseCase;
 import com.sherpa.interviewsherpa.member.application.port.out.LoadOAuthMemberPort;
 import com.sherpa.interviewsherpa.member.application.port.out.SaveOAuthMemberPort;
@@ -19,13 +18,10 @@ public class OAuthSignInMemberService implements OAuthSignInMemberUseCase {
 
 	private final SaveOAuthMemberPort saveOAuthMemberPort;
 	private final LoadOAuthMemberPort loadOAuthMemberPort;
-	private final JwtHelper jwtHelper;
 
-	public OAuthSignInMemberService(SaveOAuthMemberPort saveOAuthMemberPort, LoadOAuthMemberPort loadOAuthMemberPort,
-		JwtHelper jwtHelper) {
+	public OAuthSignInMemberService(SaveOAuthMemberPort saveOAuthMemberPort, LoadOAuthMemberPort loadOAuthMemberPort) {
 		this.saveOAuthMemberPort = saveOAuthMemberPort;
 		this.loadOAuthMemberPort = loadOAuthMemberPort;
-		this.jwtHelper = jwtHelper;
 	}
 
 	@Override
@@ -33,18 +29,19 @@ public class OAuthSignInMemberService implements OAuthSignInMemberUseCase {
 	public OAuthSignInMemberResult signInOAuthMember(OAuthSignInMemberCommand command) {
 
 		var member = loadOAuthMemberPort.loadOAuthMemberOrNull(command.getEmail());
-		if (member.isPresent()) {
-			return new OAuthSignInMemberResult(jwtHelper.createJwt(member.get().getEmail()));
+		if (member.isEmpty()) {
+
+			Member newMember = saveOAuthMemberPort.saveOAuthMember(Member.withoutId(
+				command.getEmail(),
+				command.getName(),
+				command.getProfileURL())
+			);
+
+			log.info("New member created: {}", newMember.getEmail());
+			return new OAuthSignInMemberResult(newMember, command.getOAuthProvider());
 		}
 
-		Member newMember = Member.withoutId(
-			command.getEmail(),
-			command.getName(),
-			command.getProfileURL()
-		);
-
-		log.info("New member created: {}", newMember.getEmail());
-		saveOAuthMemberPort.saveOAuthMember(newMember);
-		return new OAuthSignInMemberResult(jwtHelper.createJwt(newMember.getEmail()));
+		return new OAuthSignInMemberResult(member.get(), command.getOAuthProvider());
 	}
+
 }

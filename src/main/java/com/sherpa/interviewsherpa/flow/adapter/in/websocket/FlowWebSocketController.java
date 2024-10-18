@@ -1,16 +1,18 @@
 package com.sherpa.interviewsherpa.flow.adapter.in.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.UUID;
+
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sherpa.interviewsherpa.flow.adapter.in.websocket.dto.FlowRequestResponse;
-import com.sherpa.interviewsherpa.flow.adapter.in.websocket.dto.FlowUpdateRequest;
-import com.sherpa.interviewsherpa.flow.adapter.out.persistence.repository.FlowRepository;
-import com.sherpa.interviewsherpa.flow.application.port.in.FlowRequestUseCase;
-import com.sherpa.interviewsherpa.flow.domain.websocket.command.WebSocketCommandFactory;
+import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.getflow.GetFlowResponse;
+import com.sherpa.interviewsherpa.flow.adapter.in.websocket.dto.PatchFlowRequest;
+import com.sherpa.interviewsherpa.flow.application.port.in.GetFlowUseCase;
+import com.sherpa.interviewsherpa.flow.application.port.in.PatchFlowUseCase;
+import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowCommand;
+import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFlowCommand;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,37 +20,28 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 public class FlowWebSocketController {
 
-	private final WebSocketCommandFactory webSocketCommandFactory;
-	private final FlowRequestUseCase flowRequestUseCase;
-	@Autowired
-	private FlowRepository flowRepository;
-	private ObjectMapper objectMapper;
+	private final GetFlowUseCase getFlowUseCase;
+	private final PatchFlowUseCase patchFlowUseCase;
 
-	public FlowWebSocketController(WebSocketCommandFactory webSocketCommandFactory,
-		FlowRequestUseCase flowRequestUseCase) {
-		this.webSocketCommandFactory = webSocketCommandFactory;
-		this.flowRequestUseCase = flowRequestUseCase;
+	public FlowWebSocketController(GetFlowUseCase getFlowUseCase, PatchFlowUseCase patchFlowUseCase) {
+		this.getFlowUseCase = getFlowUseCase;
+		this.patchFlowUseCase = patchFlowUseCase;
 	}
 
-	@MessageMapping("/flow/request")
-	@SendTo("/topic/flow")
-	public FlowRequestResponse sendFlow() {
-
-		var result = flowRequestUseCase.getFlow(null);
-		return new FlowRequestResponse(result.getFlowId(), result.getFlow());
+	@MessageMapping("/flow/{flowId}/get")
+	@SendTo("/topic/flow/{flowId}")
+	public GetFlowResponse sendFlow(@DestinationVariable UUID flowId) {
+		var command = new GetFlowCommand(flowId);
+		var result = getFlowUseCase.getFlow(command);
+		return new GetFlowResponse(result.flow());
 	}
 
-	@MessageMapping("/flow/update")
-	@SendTo("/topic/flow")
-	public void saveFlow(FlowUpdateRequest request) {
-
-		System.out.println("request = " + request);
-		objectMapper = new ObjectMapper();
-
-		log.info("Received flow update request: {}", request);
-		var flowJpaEntity = flowRepository.findAll().getFirst();
-		flowJpaEntity.setFlowContent(request.getFlow());
-		flowRepository.save(flowJpaEntity);
+	@MessageMapping("/flow/{flowId}/patch")
+	@SendTo("/topic/flow/{flowId}")
+	public void patchFlow(@DestinationVariable UUID flowId, PatchFlowRequest request) {
+		System.out.println("patch flowId = " + flowId);
+		var command = new PatchFlowCommand(flowId, request.flow());
+		patchFlowUseCase.patchFlow(command);
 	}
 
 }
