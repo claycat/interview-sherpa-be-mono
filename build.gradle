@@ -1,65 +1,66 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.3.4'
-    id 'io.spring.dependency-management' version '1.1.6'
+	id 'java'
+	id 'org.springframework.boot' version '3.3.4'
+	id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.sherpa'
 version = '0.0.1-SNAPSHOT'
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
 }
 
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 dependencies {
 
-    //SPRING
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//SPRING
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    //SECURITY
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    testImplementation 'org.springframework.security:spring-security-test'
-    implementation("org.springframework.security:spring-security-oauth2-client")
-    implementation("org.springframework.security:spring-security-config")
-    implementation 'org.springframework.security:spring-security-oauth2-jose:6.3.3'
+	//SECURITY
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation("org.springframework.security:spring-security-oauth2-client")
+	implementation("org.springframework.security:spring-security-config")
+	implementation 'org.springframework.security:spring-security-oauth2-jose:6.3.3'
 
-    //ETC
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
-    implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
-
-
-    //JWT
-    ext {
-        JJWT_VERSION = "0.12.5"
-    }
-    implementation "io.jsonwebtoken:jjwt-api:${JJWT_VERSION}"
-    runtimeOnly "io.jsonwebtoken:jjwt-gson:${JJWT_VERSION}"
-    runtimeOnly "io.jsonwebtoken:jjwt-impl:${JJWT_VERSION}"
+	//ETC
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 
-    // DATABASE
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-    runtimeOnly 'com.h2database:h2'
-    testImplementation 'com.h2database:h2'
-    implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+	//JWT
+	ext {
+		JJWT_VERSION = "0.12.5"
+	}
+	implementation "io.jsonwebtoken:jjwt-api:${JJWT_VERSION}"
+	runtimeOnly "io.jsonwebtoken:jjwt-gson:${JJWT_VERSION}"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${JJWT_VERSION}"
 
 
-    //PROTOCOL
-    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	// DATABASE
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'com.h2database:h2'
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+
+
+	//PROTOCOL
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 }
 
 tasks.named('test') {
-    useJUnitPlatform()
+	useJUnitPlatform()
 }

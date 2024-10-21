@@ -8,6 +8,8 @@ import com.sherpa.interviewsherpa.flow.application.port.in.dto.createflow.Create
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.createflow.CreateFlowResult;
 import com.sherpa.interviewsherpa.flow.application.port.out.SaveFlowPort;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class CreateFlowService implements CreateFlowUseCase {
 
@@ -20,6 +22,7 @@ public class CreateFlowService implements CreateFlowUseCase {
 	}
 
 	@Override
+	@Transactional
 	public CreateFlowResult createFlow(CreateFlowCommand createFlowCommand) {
 		var flow = flowFactory.deserialize(createFlowCommand.getFlow());
 		var newFlow = saveFlowPort.saveFlow(createFlowCommand.getMemberId(), flow);

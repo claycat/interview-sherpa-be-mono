@@ -11,6 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.MemberFlowRoleJpaEntity;
+import com.sherpa.interviewsherpa.comment.adaptor.out.persistence.entity.CommentJpaEntity;
 import com.sherpa.interviewsherpa.flow.adapter.out.persistence.entity.FlowJpaEntity;
 
 import jakarta.persistence.Column;
@@ -55,6 +56,9 @@ public class MemberJpaEntity {
 
 	@OneToMany(mappedBy = "owner")
 	private List<FlowJpaEntity> flows = new ArrayList<>();
+
+	@OneToMany(mappedBy = "owner")
+	private List<CommentJpaEntity> comments = new ArrayList<>();
 
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)

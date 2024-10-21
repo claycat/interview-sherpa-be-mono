@@ -39,7 +39,6 @@ public class FlowWebSocketController {
 	@MessageMapping("/flow/{flowId}/patch")
 	@SendTo("/topic/flow/{flowId}")
 	public void patchFlow(@DestinationVariable UUID flowId, PatchFlowRequest request) {
-		System.out.println("patch flowId = " + flowId);
 		var command = new PatchFlowCommand(flowId, request.flow());
 		patchFlowUseCase.patchFlow(command);
 	}
