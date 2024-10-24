@@ -25,7 +25,7 @@ public class CreateFlowService implements CreateFlowUseCase {
 	@Transactional
 	public CreateFlowResult createFlow(CreateFlowCommand createFlowCommand) {
 		var flow = flowFactory.deserialize(createFlowCommand.getFlow());
-		var newFlow = saveFlowPort.saveFlow(createFlowCommand.getMemberId(), flow);
+		var newFlow = saveFlowPort.saveFlow(createFlowCommand.getMemberId(), flow, createFlowCommand.getTitle());
 		return new CreateFlowResult(newFlow.getId());
 	}
 }

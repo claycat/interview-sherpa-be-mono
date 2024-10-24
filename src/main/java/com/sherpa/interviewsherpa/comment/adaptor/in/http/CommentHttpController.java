@@ -2,6 +2,7 @@ package com.sherpa.interviewsherpa.comment.adaptor.in.http;
 
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,18 +32,18 @@ public class CommentHttpController {
 	}
 
 	@GetMapping("/flow/{flowId}/node/{nodeId}/comments")
-	public ApiResponse<GetCommentResponse> getComments(
+	public ResponseEntity<ApiResponse<GetCommentResponse>> getComments(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId) {
 
 		var command = new GetCommentsCommand(flowId, nodeId);
 		var result = getCommentsUseCase.getComments(command);
 
-		return ApiResponse.wrap(new GetCommentResponse(result.comments()));
+		return ResponseEntity.ok(ApiResponse.wrap(new GetCommentResponse(result.comments())));
 	}
 
 	@PostMapping("/flow/{flowId}/node/{nodeId}/comments")
-	public ApiResponse<PostCommentResponse> postComment(
+	public ResponseEntity<ApiResponse<PostCommentResponse>> postComment(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId,
 		@Valid @RequestBody PostCommentRequest request) {
@@ -54,13 +55,10 @@ public class CommentHttpController {
 			request.parentId()
 		);
 
-		System.out.println("request.toString() = " + request.toString());
-		System.out.println("command.toString() = " + command.toString());
-
 		var result = postCommentUseCase.postComment(command);
-		return ApiResponse.wrap(
+		return ResponseEntity.ok(ApiResponse.wrap(
 			new PostCommentResponse(result.commentId(), result.memberId(), result.nodeId(), result.content(),
-				result.createdAt()));
+				result.createdAt())));
 	}
 
 }

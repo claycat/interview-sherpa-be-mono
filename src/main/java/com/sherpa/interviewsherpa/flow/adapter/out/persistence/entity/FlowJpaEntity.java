@@ -57,6 +57,10 @@ public class FlowJpaEntity {
 	@Type(JsonType.class)
 	private Flow flowContent;
 
+	@Setter
+	@Column(name = "flow_title", nullable = false)
+	private String title;
+
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at", nullable = false)
@@ -78,8 +82,9 @@ public class FlowJpaEntity {
 	}
 
 	@Builder
-	public FlowJpaEntity(Flow flowContent) {
+	public FlowJpaEntity(Flow flowContent, String title) {
 		this.flowContent = flowContent;
+		this.title = title;
 	}
 
 }

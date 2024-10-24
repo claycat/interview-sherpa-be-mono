@@ -2,7 +2,9 @@ package com.sherpa.interviewsherpa.flow.adapter.in.http;
 
 import java.util.UUID;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,38 +13,51 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.createflow.CreateFlowRequest;
 import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.createflow.CreateFlowResponse;
+import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.createflow.PatchFlowTitleRequest;
 import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.getflow.GetFlowResponse;
+import com.sherpa.interviewsherpa.flow.application.port.in.CreateFlowUseCase;
 import com.sherpa.interviewsherpa.flow.application.port.in.GetFlowUseCase;
+import com.sherpa.interviewsherpa.flow.application.port.in.PatchFlowUseCase;
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowCommand;
-import com.sherpa.interviewsherpa.flow.application.service.CreateFlowService;
+import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFlowTitleCommand;
 import com.sherpa.interviewsherpa.http.ApiResponse;
 
 @RestController
 @RequestMapping("/flow")
 public class FlowHttpController {
 
-	private final CreateFlowService createFlowService;
+	private final CreateFlowUseCase createFlowUseCase;
+	private final PatchFlowUseCase patchFlowUseCase;
 	private final GetFlowUseCase getFlowUseCase;
 
-	public FlowHttpController(CreateFlowService createFlowService, GetFlowUseCase getFlowUseCase) {
-		this.createFlowService = createFlowService;
+	public FlowHttpController(CreateFlowUseCase createFlowUseCase, PatchFlowUseCase patchFlowUseCase,
+		GetFlowUseCase getFlowUseCase) {
+		this.createFlowUseCase = createFlowUseCase;
+		this.patchFlowUseCase = patchFlowUseCase;
 		this.getFlowUseCase = getFlowUseCase;
 	}
 
 	@PostMapping
-	public ApiResponse<CreateFlowResponse> createFlow(@RequestBody CreateFlowRequest request) {
+	public ResponseEntity<ApiResponse<CreateFlowResponse>> createFlow(@RequestBody CreateFlowRequest request) {
 		var createFlowCommand = request.toCommand();
-		var createFlowResult = createFlowService.createFlow(createFlowCommand);
+		var createFlowResult = createFlowUseCase.createFlow(createFlowCommand);
 		var response = new CreateFlowResponse(createFlowResult.getFlowId());
-		return ApiResponse.wrap(response);
+		return ResponseEntity.ok(ApiResponse.wrap(response));
 	}
 
 	@GetMapping("/{flowId}")
-	public ApiResponse<GetFlowResponse> getFlow(@PathVariable UUID flowId) {
+	public ResponseEntity<ApiResponse<GetFlowResponse>> getFlow(@PathVariable UUID flowId) {
 		var command = new GetFlowCommand(flowId);
 		var result = getFlowUseCase.getFlow(command);
 		var response = new GetFlowResponse(result.flow());
-		return ApiResponse.wrap(response);
+		return ResponseEntity.ok(ApiResponse.wrap(response));
+	}
+
+	@PatchMapping("/{flowId}/title")
+	public ResponseEntity<?> updateFlowTitle(@PathVariable UUID flowId, @RequestBody PatchFlowTitleRequest request) {
+		var command = new PatchFlowTitleCommand(flowId, request.title());
+		patchFlowUseCase.patchFlowTitle(command);
+		return ResponseEntity.ok(ApiResponse.wrap(null));
 	}
 
 }
