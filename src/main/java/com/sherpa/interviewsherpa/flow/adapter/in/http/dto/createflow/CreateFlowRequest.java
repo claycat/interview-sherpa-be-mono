@@ -15,13 +15,15 @@ public class CreateFlowRequest {
 
 	private final UUID memberId;
 	private final String flow;
+	private final String title;
 
-	public CreateFlowRequest(UUID memberId, String flow) {
+	public CreateFlowRequest(UUID memberId, String flow, String title) {
 		this.memberId = memberId;
 		this.flow = flow;
+		this.title = title;
 	}
 
 	public CreateFlowCommand toCommand() {
-		return new CreateFlowCommand(memberId, flow);
+		return new CreateFlowCommand(memberId, flow, title);
 	}
 }

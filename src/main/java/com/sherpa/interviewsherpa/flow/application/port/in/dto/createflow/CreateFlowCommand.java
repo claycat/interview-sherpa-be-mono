@@ -13,10 +13,12 @@ public class CreateFlowCommand {
 
 	private final UUID memberId;
 	private final String flow;
+	private final String title;
 
-	public CreateFlowCommand(UUID memberId, String flow) {
+	public CreateFlowCommand(UUID memberId, String flow, String title) {
 		this.memberId = memberId;
 		this.flow = flow;
+		this.title = title;
 	}
 
 }

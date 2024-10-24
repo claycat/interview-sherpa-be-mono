@@ -35,9 +35,9 @@ public class FlowPersistenceAdapter implements SaveFlowPort, LoadFlowPort, Updat
 	}
 
 	@Override
-	public Flow saveFlow(UUID memberId, Flow flow) {
+	public Flow saveFlow(UUID memberId, Flow flow, String title) {
 		var member = memberRepository.findById(memberId).orElseThrow(() -> new MemberNotFoundException(memberId));
-		var flowJpaEntity = new FlowJpaEntity(flow);
+		var flowJpaEntity = new FlowJpaEntity(flow, title);
 		flowJpaEntity.setOwner(member);
 		var newFlowJpaEntity = flowRepository.save(flowJpaEntity);
 		return flowMapper.mapToDomainEntity(newFlowJpaEntity);
@@ -51,4 +51,15 @@ public class FlowPersistenceAdapter implements SaveFlowPort, LoadFlowPort, Updat
 		var updatedFlowJpaEntity = flowRepository.save(flowJpaEntity);
 		return flowMapper.mapToDomainEntity(updatedFlowJpaEntity);
 	}
+
+	@Override
+	public Flow updateFlowTitle(UUID flowId, String title) {
+		var flowJpaEntity = flowRepository.findById(flowId)
+			.orElseThrow(() -> new FlowNotFoundException(flowId));
+
+		flowJpaEntity.setTitle(title);
+		var updatedFlowJpaEntity = flowRepository.save(flowJpaEntity);
+		return flowMapper.mapToDomainEntity(updatedFlowJpaEntity);
+	}
+
 }

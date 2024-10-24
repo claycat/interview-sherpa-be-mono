@@ -5,5 +5,5 @@ import java.util.UUID;
 import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
 
 public interface SaveFlowPort {
-	Flow saveFlow(UUID memberId, Flow flow);
+	Flow saveFlow(UUID memberId, Flow flow, String title);
 }

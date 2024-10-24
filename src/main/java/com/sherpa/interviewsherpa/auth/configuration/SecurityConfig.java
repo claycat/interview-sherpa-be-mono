@@ -12,6 +12,8 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +39,9 @@ public class SecurityConfig {
 				.failureUrl("/login?error=true"))
 			.logout(logout -> logout
 				.logoutUrl("/logout")
-				.logoutSuccessUrl("/home")
+				.logoutSuccessHandler(logoutSuccessHandler())
+				.invalidateHttpSession(true)
+				.deleteCookies("JSESSIONID")
 				.permitAll()
 			)
 			.sessionManagement(sessionManagement -> sessionManagement
@@ -60,5 +64,11 @@ public class SecurityConfig {
 		handler.setRedirectStrategy(new DefaultRedirectStrategy());
 		handler.setDefaultTargetUrl("/dashboard");
 		return handler;
+	}
+
+	@Bean
+	public LogoutSuccessHandler logoutSuccessHandler() {
+		// Return HTTP 200 OK on successful logout without redirect
+		return new HttpStatusReturningLogoutSuccessHandler();
 	}
 }

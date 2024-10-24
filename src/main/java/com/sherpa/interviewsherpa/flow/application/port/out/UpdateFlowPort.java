@@ -6,4 +6,6 @@ import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
 
 public interface UpdateFlowPort {
 	Flow updateFlow(UUID flowId, Flow flow);
+
+	Flow updateFlowTitle(UUID flowId, String title);
 }
