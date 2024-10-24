@@ -17,5 +17,5 @@ public class NodeData {
 	private String label;
 	private String question;
 	private List<String> answers;
-
+	private List<Object> comments;
 }

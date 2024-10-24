@@ -9,12 +9,15 @@ import lombok.ToString;
 @NoArgsConstructor(force = true)
 public class ApiResponse<T> {
 	private final T data;
+	private final boolean success;
 
-	private ApiResponse(T data) {
+	private ApiResponse(T data, boolean success) {
 		this.data = data;
+		this.success = success;
 	}
 
 	public static <T> ApiResponse<T> wrap(T data) {
-		return new ApiResponse<>(data);
+		return new ApiResponse<>(data, true);
 	}
+
 }

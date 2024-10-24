@@ -58,3 +58,16 @@ CREATE TABLE member_flow_roles (
 
     primary key (member_flow_role_id)
 );
+
+CREATE TABLE comments
+(
+    comment_id binary(16) PRIMARY KEY,
+    member_id  binary(16) NOT NULL,
+    node_id    binary(16) NOT NULL,
+    parent_id  binary(16),
+    content    TEXT      NOT NULL,
+    created_at TIMESTAMP NOT NULL,
+    updated_at TIMESTAMP NOT NULL,
+
+    primary key (comment_id)
+);
