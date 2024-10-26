@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.CommentQueryModel;
 import com.sherpa.interviewsherpa.comment.adaptor.out.persistence.entity.CommentJpaEntity;
+import com.sherpa.interviewsherpa.comment.application.port.in.dto.CommentQueryModel;
 import com.sherpa.interviewsherpa.comment.domain.Comment;
 
 @Component

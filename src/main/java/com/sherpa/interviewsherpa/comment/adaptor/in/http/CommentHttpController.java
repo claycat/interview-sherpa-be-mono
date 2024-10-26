@@ -1,5 +1,6 @@
 package com.sherpa.interviewsherpa.comment.adaptor.in.http;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.GetCommentResponse;
+import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.GetCommentResponseDto;
 import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.PostCommentRequest;
 import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.PostCommentResponse;
 import com.sherpa.interviewsherpa.comment.application.port.in.GetCommentsUseCase;
@@ -31,7 +33,7 @@ public class CommentHttpController {
 		this.getCommentsUseCase = getCommentsUseCase;
 	}
 
-	@GetMapping("/flow/{flowId}/node/{nodeId}/comments")
+	@GetMapping("/flows/{flowId}/nodes/{nodeId}/comments")
 	public ResponseEntity<ApiResponse<GetCommentResponse>> getComments(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId) {
@@ -39,10 +41,20 @@ public class CommentHttpController {
 		var command = new GetCommentsCommand(flowId, nodeId);
 		var result = getCommentsUseCase.getComments(command);
 
-		return ResponseEntity.ok(ApiResponse.wrap(new GetCommentResponse(result.comments())));
+		List<GetCommentResponseDto> responseComments = result.comments().stream()
+			.map(comment -> new GetCommentResponseDto(
+				comment.id(),
+				comment.content(),
+				comment.author(),
+				comment.profileURL(),
+				comment.createdAt()
+			))
+			.toList();
+
+		return ResponseEntity.ok(ApiResponse.wrap(new GetCommentResponse(responseComments)));
 	}
 
-	@PostMapping("/flow/{flowId}/node/{nodeId}/comments")
+	@PostMapping("/flows/{flowId}/nodes/{nodeId}/comments")
 	public ResponseEntity<ApiResponse<PostCommentResponse>> postComment(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId,

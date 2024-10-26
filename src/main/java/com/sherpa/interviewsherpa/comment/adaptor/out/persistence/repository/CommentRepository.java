@@ -11,4 +11,6 @@ import com.sherpa.interviewsherpa.comment.adaptor.out.persistence.entity.Comment
 @Repository
 public interface CommentRepository extends JpaRepository<CommentJpaEntity, UUID> {
 	List<CommentJpaEntity> findByNodeId(UUID nodeId);
+
+	void deleteByFlowId(UUID flowId);
 }

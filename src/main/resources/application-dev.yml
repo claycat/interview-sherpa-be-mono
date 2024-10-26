@@ -55,5 +55,5 @@ server:
   port: ${DEV_PORT:8888}
   servlet:
     session:
-      timeout: 30m
+      timeout: 1h
     context-path: /api

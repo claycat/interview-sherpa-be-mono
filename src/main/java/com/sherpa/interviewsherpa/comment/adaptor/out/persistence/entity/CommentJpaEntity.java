@@ -46,6 +46,9 @@ public class CommentJpaEntity {
 	@Column(name = "node_id", nullable = false, updatable = false)
 	private UUID nodeId;
 
+	@Column(name = "flow_id", nullable = false, updatable = false)
+	private UUID flowId;
+
 	@ManyToOne
 	@Setter
 	@JoinColumn(name = "parent_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
@@ -75,7 +78,8 @@ public class CommentJpaEntity {
 	}
 
 	@Builder
-	public CommentJpaEntity(String content, UUID nodeId) {
+	public CommentJpaEntity(String content, UUID nodeId, UUID flowId) {
+		this.flowId = flowId;
 		this.content = content;
 		this.nodeId = nodeId;
 	}
