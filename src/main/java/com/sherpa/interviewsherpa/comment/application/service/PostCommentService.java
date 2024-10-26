@@ -19,8 +19,13 @@ public class PostCommentService implements PostCommentUseCase {
 
 	@Override
 	public PostCommentResult postComment(PostCommentCommand command) {
-		Comment newComment = postCommentPort.saveComment(command.content(), command.memberId(), command.parentId(),
-			command.nodeId());
+		Comment newComment = postCommentPort.saveComment(
+			command.content(),
+			command.memberId(),
+			command.parentId(),
+			command.nodeId(),
+			command.flowId()
+		);
 
 		return new PostCommentResult(newComment.getId(), newComment.getOwnerId(), newComment.getNodeId(),
 			newComment.getContent(), newComment.getCreatedAt());

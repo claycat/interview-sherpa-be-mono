@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
 
-public interface LoadFlowPort {
+public interface GetFlowPort {
 	Flow loadFlow(UUID flowId);
+
 }

@@ -1,11 +1,15 @@
 package com.sherpa.interviewsherpa.flow.adapter.out.persistence;
 
+import java.util.List;
 import java.util.UUID;
 
 import com.sherpa.interviewsherpa.common.annotation.PersistenceAdapter;
 import com.sherpa.interviewsherpa.flow.adapter.out.persistence.entity.FlowJpaEntity;
 import com.sherpa.interviewsherpa.flow.adapter.out.persistence.repository.FlowRepository;
-import com.sherpa.interviewsherpa.flow.application.port.out.LoadFlowPort;
+import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.MemberFlowQueryModel;
+import com.sherpa.interviewsherpa.flow.application.port.out.DeleteFlowPort;
+import com.sherpa.interviewsherpa.flow.application.port.out.GetFlowPort;
+import com.sherpa.interviewsherpa.flow.application.port.out.GetMemberFlowsQueryPort;
 import com.sherpa.interviewsherpa.flow.application.port.out.SaveFlowPort;
 import com.sherpa.interviewsherpa.flow.application.port.out.UpdateFlowPort;
 import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
@@ -14,7 +18,8 @@ import com.sherpa.interviewsherpa.member.adapter.out.persistence.repository.Memb
 import com.sherpa.interviewsherpa.member.exception.MemberNotFoundException;
 
 @PersistenceAdapter
-public class FlowPersistenceAdapter implements SaveFlowPort, LoadFlowPort, UpdateFlowPort {
+public class FlowPersistenceAdapter implements SaveFlowPort, GetFlowPort, UpdateFlowPort, GetMemberFlowsQueryPort,
+	DeleteFlowPort {
 
 	private final MemberRepository memberRepository;
 	private final FlowRepository flowRepository;
@@ -62,4 +67,18 @@ public class FlowPersistenceAdapter implements SaveFlowPort, LoadFlowPort, Updat
 		return flowMapper.mapToDomainEntity(updatedFlowJpaEntity);
 	}
 
+	@Override
+	public List<MemberFlowQueryModel> getMemberFlows(UUID memberId) {
+		var memberFlowJpaEntities = memberRepository.findById(memberId)
+			.orElseThrow(() -> new MemberNotFoundException(memberId)).getFlows();
+
+		return memberFlowJpaEntities.stream()
+			.map(e -> new MemberFlowQueryModel(e.getId(), e.getTitle(), e.getUpdatedAt(), e.getCreatedAt()))
+			.toList();
+	}
+
+	@Override
+	public void deleteFlow(UUID flowId) {
+		flowRepository.deleteById(flowId);
+	}
 }

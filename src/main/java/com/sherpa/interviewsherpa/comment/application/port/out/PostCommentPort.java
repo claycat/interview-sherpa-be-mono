@@ -5,5 +5,5 @@ import java.util.UUID;
 import com.sherpa.interviewsherpa.comment.domain.Comment;
 
 public interface PostCommentPort {
-	Comment saveComment(String content, UUID memberId, UUID parentId, UUID nodeId);
+	Comment saveComment(String content, UUID memberId, UUID parentId, UUID nodeId, UUID flowId);
 }

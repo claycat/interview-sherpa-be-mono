@@ -5,20 +5,20 @@ import org.springframework.stereotype.Service;
 import com.sherpa.interviewsherpa.flow.application.port.in.GetFlowUseCase;
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowCommand;
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowResult;
-import com.sherpa.interviewsherpa.flow.application.port.out.LoadFlowPort;
+import com.sherpa.interviewsherpa.flow.application.port.out.GetFlowPort;
 
 @Service
 public class GetFlowService implements GetFlowUseCase {
 
-	private final LoadFlowPort loadFlowPort;
+	private final GetFlowPort getFlowPort;
 
-	public GetFlowService(LoadFlowPort loadFlowPort) {
-		this.loadFlowPort = loadFlowPort;
+	public GetFlowService(GetFlowPort getFlowPort) {
+		this.getFlowPort = getFlowPort;
 	}
 
 	@Override
 	public GetFlowResult getFlow(GetFlowCommand command) {
-		var flow = loadFlowPort.loadFlow(command.flowId());
+		var flow = getFlowPort.loadFlow(command.flowId());
 		return new GetFlowResult(flow);
 	}
 }
