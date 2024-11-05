@@ -12,10 +12,11 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.MemberFlowRoleJpaEntity;
-import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
+import com.sherpa.interviewsherpa.flow.domain.flowcontent.FlowContent;
 import com.sherpa.interviewsherpa.member.adapter.out.persistence.entity.MemberJpaEntity;
 
 import io.hypersistence.utils.hibernate.type.json.JsonType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -45,7 +46,7 @@ public class FlowJpaEntity {
 	@Column(name = "flow_id", nullable = false, updatable = false)
 	private UUID id;
 
-	@OneToMany(mappedBy = "flow")
+	@OneToMany(mappedBy = "flow", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<MemberFlowRoleJpaEntity> memberFlowRoles = new ArrayList<>();
 
 	@ManyToOne
@@ -55,7 +56,7 @@ public class FlowJpaEntity {
 	@Setter
 	@Column(name = "flow_content", columnDefinition = "json")
 	@Type(JsonType.class)
-	private Flow flowContent;
+	private FlowContent flowContent;
 
 	@Setter
 	@Column(name = "flow_title", nullable = false)
@@ -82,9 +83,14 @@ public class FlowJpaEntity {
 	}
 
 	@Builder
-	public FlowJpaEntity(Flow flowContent, String title) {
+	public FlowJpaEntity(FlowContent flowContent, String title) {
 		this.flowContent = flowContent;
 		this.title = title;
+	}
+
+	public void setMemberFlowRoles(List<MemberFlowRoleJpaEntity> memberFlowRoles) {
+		this.memberFlowRoles.clear();
+		this.memberFlowRoles.addAll(memberFlowRoles);
 	}
 
 }

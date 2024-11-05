@@ -1,7 +1,7 @@
 package com.sherpa.interviewsherpa.flow.adapter.in.websocket.dto;
 
-import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
+import com.sherpa.interviewsherpa.flow.domain.flowcontent.FlowContent;
 
-public record PatchFlowRequest(Flow flow) {
+public record PatchFlowRequest(FlowContent flow) {
 
 }

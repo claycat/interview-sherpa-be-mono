@@ -3,8 +3,10 @@ package com.sherpa.interviewsherpa.flow.adapter.in.websocket;
 import java.util.UUID;
 
 import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 import com.sherpa.interviewsherpa.flow.adapter.in.http.dto.getflow.GetFlowResponse;
@@ -30,15 +32,24 @@ public class FlowWebSocketController {
 
 	@MessageMapping("/flow/{flowId}/get")
 	@SendTo("/topic/flow/{flowId}")
-	public GetFlowResponse sendFlow(@DestinationVariable UUID flowId) {
+	@PreAuthorize("hasPermission(#flowId, 'VIEW_FLOW') || @flowAccessTokenService.isValidToken(#token, 'VIEW_FLOW', #flowId)")
+	public GetFlowResponse sendFlow(
+		@DestinationVariable UUID flowId,
+		@Header(value = "token", required = false) UUID token
+	) {
 		var command = new GetFlowCommand(flowId);
 		var result = getFlowUseCase.getFlow(command);
-		return new GetFlowResponse(result.flow());
+		return new GetFlowResponse(result.flowContent(), result.title());
 	}
 
 	@MessageMapping("/flow/{flowId}/patch")
 	@SendTo("/topic/flow/{flowId}")
-	public void patchFlow(@DestinationVariable UUID flowId, PatchFlowRequest request) {
+	@PreAuthorize("hasPermission(#flowId, 'EDIT_FLOW') || @flowAccessTokenService.isValidToken(#token, 'EDIT_FLOW', #flowId)")
+	public void patchFlow(
+		@DestinationVariable UUID flowId,
+		PatchFlowRequest request,
+		@Header(value = "token", required = false) UUID token
+	) {
 		var command = new PatchFlowCommand(flowId, request.flow());
 		patchFlowUseCase.patchFlow(command);
 	}

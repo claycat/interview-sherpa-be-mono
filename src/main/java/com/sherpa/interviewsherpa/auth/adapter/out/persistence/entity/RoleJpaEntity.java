@@ -10,7 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.constant.RoleEnum;
+import com.sherpa.interviewsherpa.auth.domain.constant.RoleEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,7 +44,7 @@ public class RoleJpaEntity {
 	private RoleEnum name;
 
 	@OneToMany(mappedBy = "role")
-	private List<RoleActionJpaEntity> roleActions = new ArrayList<>();
+	private List<RolePermissionJpaEntity> rolePermissions = new ArrayList<>();
 
 	@OneToMany(mappedBy = "role")
 	private List<MemberFlowRoleJpaEntity> memberFlowRoles = new ArrayList<>();

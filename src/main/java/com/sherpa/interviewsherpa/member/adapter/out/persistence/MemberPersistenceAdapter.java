@@ -1,6 +1,7 @@
 package com.sherpa.interviewsherpa.member.adapter.out.persistence;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import com.sherpa.interviewsherpa.common.annotation.PersistenceAdapter;
 import com.sherpa.interviewsherpa.member.adapter.out.persistence.repository.MemberRepository;
@@ -31,6 +32,13 @@ public class MemberPersistenceAdapter implements LoadOAuthMemberPort, SaveOAuthM
 	public Optional<Member> loadOAuthMemberOrNull(String email) {
 		return memberRepository.findByEmail(email)
 			.map(memberMapper::mapToDomainEntity);
+	}
+
+	@Override
+	public Member loadOAuthMemberById(UUID id) {
+		return memberRepository.findById(id)
+			.map(memberMapper::mapToDomainEntity)
+			.orElseThrow(() -> new MemberNotFoundException(id));
 	}
 
 	@Override

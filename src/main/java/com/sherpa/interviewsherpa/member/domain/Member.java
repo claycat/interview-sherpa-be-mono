@@ -18,6 +18,10 @@ public class Member {
 
 	private final String profileURL;
 
+	public Member(String email, String name, String profileURL) {
+		this(null, email, name, profileURL);
+	}
+
 	public static Member withoutId(String email, String name, String profileURL) {
 		return new Member(null, email, name, profileURL);
 	}

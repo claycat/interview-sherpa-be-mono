@@ -6,6 +6,8 @@ import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFl
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFlowTitleCommand;
 import com.sherpa.interviewsherpa.flow.application.port.out.UpdateFlowPort;
 
+import jakarta.transaction.Transactional;
+
 @UseCase
 public class PatchFlowService implements PatchFlowUseCase {
 
@@ -16,8 +18,9 @@ public class PatchFlowService implements PatchFlowUseCase {
 	}
 
 	@Override
+	@Transactional
 	public void patchFlow(PatchFlowCommand patchFlowCommand) {
-		var flow = updateFlowPort.updateFlow(patchFlowCommand.flowId(), patchFlowCommand.flow());
+		var flow = updateFlowPort.updateFlow(patchFlowCommand.flowId(), patchFlowCommand.flowContent());
 	}
 
 	@Override

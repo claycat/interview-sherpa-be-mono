@@ -3,80 +3,82 @@ package com.sherpa.interviewsherpa.auth.configuration;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.constant.ActionEnum;
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.constant.RoleEnum;
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.ActionJpaEntity;
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.RoleActionJpaEntity;
+import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.PermissionJpaEntity;
 import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.RoleJpaEntity;
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.repository.ActionRepository;
-import com.sherpa.interviewsherpa.auth.adapter.out.persistence.repository.RoleActionRepository;
+import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.RolePermissionJpaEntity;
+import com.sherpa.interviewsherpa.auth.adapter.out.persistence.repository.PermissionRepository;
+import com.sherpa.interviewsherpa.auth.adapter.out.persistence.repository.RolePermissionRepository;
 import com.sherpa.interviewsherpa.auth.adapter.out.persistence.repository.RoleRepository;
+import com.sherpa.interviewsherpa.auth.domain.constant.PermissionEnum;
+import com.sherpa.interviewsherpa.auth.domain.constant.RoleEnum;
 
 @Component
 public class ActionRoleInitializer implements CommandLineRunner {
 
 	private final RoleRepository roleRepository;
-	private final ActionRepository actionRepository;
-	private final RoleActionRepository roleActionRepository;
+	private final PermissionRepository permissionRepository;
+	private final RolePermissionRepository rolePermissionRepository;
 
 	public ActionRoleInitializer(RoleRepository roleRepository,
-		ActionRepository actionRepository,
-		RoleActionRepository roleActionRepository) {
+		PermissionRepository permissionRepository,
+		RolePermissionRepository rolePermissionRepository) {
 		this.roleRepository = roleRepository;
-		this.actionRepository = actionRepository;
-		this.roleActionRepository = roleActionRepository;
+		this.permissionRepository = permissionRepository;
+		this.rolePermissionRepository = rolePermissionRepository;
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
 
 		// Initialize RoleJpaEntities
-		RoleJpaEntity viewerRoleJpaEntity = new RoleJpaEntity(RoleEnum.VIEWER);
-		RoleJpaEntity editorRoleJpaEntity = new RoleJpaEntity(RoleEnum.EDITOR);
-		RoleJpaEntity commenterRoleJpaEntity = new RoleJpaEntity(RoleEnum.COMMENTER);
-		RoleJpaEntity adminRoleJpaEntity = new RoleJpaEntity(RoleEnum.ADMIN);
-		RoleJpaEntity ownerRoleJpaEntity = new RoleJpaEntity(RoleEnum.OWNER);
+		RoleJpaEntity ownerRole = new RoleJpaEntity(RoleEnum.OWNER);
+		RoleJpaEntity editorRole = new RoleJpaEntity(RoleEnum.EDITOR);
+		RoleJpaEntity viewerRole = new RoleJpaEntity(RoleEnum.VIEWER);
+		RoleJpaEntity commentatorRole = new RoleJpaEntity(RoleEnum.COMMENTER);
 
-		roleRepository.save(viewerRoleJpaEntity);
-		roleRepository.save(editorRoleJpaEntity);
-		roleRepository.save(commenterRoleJpaEntity);
-		roleRepository.save(adminRoleJpaEntity);
-		roleRepository.save(ownerRoleJpaEntity);
+		roleRepository.save(ownerRole);
+		roleRepository.save(editorRole);
+		roleRepository.save(viewerRole);
+		roleRepository.save(commentatorRole);
 
-		// Initialize actions
-		ActionJpaEntity editFlowAction = new ActionJpaEntity(ActionEnum.EDIT_FLOW);
-		ActionJpaEntity viewFlowAction = new ActionJpaEntity(ActionEnum.VIEW_FLOW);
-		ActionJpaEntity deleteFlowAction = new ActionJpaEntity(ActionEnum.DELETE_FLOW);
-		ActionJpaEntity commentFlowAction = new ActionJpaEntity(ActionEnum.CREATE_FLOW_COMMENT);
+		// Initialize actions (permissions)
+		PermissionJpaEntity viewItemAction = new PermissionJpaEntity(PermissionEnum.VIEW_FLOW);
+		PermissionJpaEntity editItemAction = new PermissionJpaEntity(PermissionEnum.EDIT_FLOW);
+		PermissionJpaEntity commentItemAction = new PermissionJpaEntity(PermissionEnum.COMMENT_FLOW);
+		PermissionJpaEntity deleteItemAction = new PermissionJpaEntity(PermissionEnum.DELETE_FLOW);
+		PermissionJpaEntity shareItemAction = new PermissionJpaEntity(PermissionEnum.SHARE_FLOW);
+		PermissionJpaEntity changeVisibilityAction = new PermissionJpaEntity(PermissionEnum.CHANGE_VISIBILITY);
+		PermissionJpaEntity configureCommentsAction = new PermissionJpaEntity(PermissionEnum.CONFIGURE_COMMENTS);
 
-		actionRepository.save(editFlowAction);
-		actionRepository.save(viewFlowAction);
-		actionRepository.save(deleteFlowAction);
-		actionRepository.save(commentFlowAction);
+		permissionRepository.save(viewItemAction);
+		permissionRepository.save(editItemAction);
+		permissionRepository.save(commentItemAction);
+		permissionRepository.save(deleteItemAction);
+		permissionRepository.save(shareItemAction);
+		permissionRepository.save(changeVisibilityAction);
+		permissionRepository.save(configureCommentsAction);
 
-		// Initialize RoleJpaEntity-action mappings
+		// Initialize Role-Action mappings
 
-		//VIEWER
-		roleActionRepository.save(new RoleActionJpaEntity(viewerRoleJpaEntity, viewFlowAction));
+		// VIEWER: Can only view items
+		rolePermissionRepository.save(new RolePermissionJpaEntity(viewerRole, viewItemAction));
 
-		//EDITOR
-		roleActionRepository.save(new RoleActionJpaEntity(editorRoleJpaEntity, editFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(editorRoleJpaEntity, viewFlowAction));
+		// COMMENTATOR: Can view and comment on items
+		rolePermissionRepository.save(new RolePermissionJpaEntity(commentatorRole, viewItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(commentatorRole, commentItemAction));
 
-		//COMMENTER
-		//TODO : might have to add comment edit actions too
-		roleActionRepository.save(new RoleActionJpaEntity(commenterRoleJpaEntity, commentFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(commenterRoleJpaEntity, viewFlowAction));
+		// EDITOR: Can view, edit, and comment on items
+		rolePermissionRepository.save(new RolePermissionJpaEntity(editorRole, viewItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(editorRole, editItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(editorRole, commentItemAction));
 
-		//ADMIN
-		roleActionRepository.save(new RoleActionJpaEntity(adminRoleJpaEntity, editFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(adminRoleJpaEntity, viewFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(adminRoleJpaEntity, deleteFlowAction));
-
-		//OWNER
-		roleActionRepository.save(new RoleActionJpaEntity(ownerRoleJpaEntity, editFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(ownerRoleJpaEntity, viewFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(ownerRoleJpaEntity, deleteFlowAction));
-		roleActionRepository.save(new RoleActionJpaEntity(ownerRoleJpaEntity, commentFlowAction));
+		// OWNER: Has all permissions
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, viewItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, editItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, commentItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, deleteItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, shareItemAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, changeVisibilityAction));
+		rolePermissionRepository.save(new RolePermissionJpaEntity(ownerRole, configureCommentsAction));
 	}
 }

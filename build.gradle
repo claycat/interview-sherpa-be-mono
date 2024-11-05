@@ -29,6 +29,8 @@ dependencies {
 	implementation("org.springframework.security:spring-security-oauth2-client")
 	implementation("org.springframework.security:spring-security-config")
 	implementation 'org.springframework.security:spring-security-oauth2-jose:6.3.3'
+	implementation 'org.springframework.security:spring-security-messaging:6.3.4'
+
 
 	//ETC
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
