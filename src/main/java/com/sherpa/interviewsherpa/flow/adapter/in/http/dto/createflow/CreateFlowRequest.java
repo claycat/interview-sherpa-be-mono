@@ -3,6 +3,7 @@ package com.sherpa.interviewsherpa.flow.adapter.in.http.dto.createflow;
 import java.util.UUID;
 
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.createflow.CreateFlowCommand;
+import com.sherpa.interviewsherpa.flow.domain.flowcontent.FlowContent;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,16 +15,16 @@ import lombok.ToString;
 public class CreateFlowRequest {
 
 	private final UUID memberId;
-	private final String flow;
+	private final FlowContent flowContent;
 	private final String title;
 
-	public CreateFlowRequest(UUID memberId, String flow, String title) {
+	public CreateFlowRequest(UUID memberId, FlowContent flowContent, String title) {
 		this.memberId = memberId;
-		this.flow = flow;
+		this.flowContent = flowContent;
 		this.title = title;
 	}
 
 	public CreateFlowCommand toCommand() {
-		return new CreateFlowCommand(memberId, flow, title);
+		return new CreateFlowCommand(memberId, flowContent, title);
 	}
 }

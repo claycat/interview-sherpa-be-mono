@@ -14,6 +14,7 @@ import com.sherpa.interviewsherpa.auth.adapter.out.persistence.entity.MemberFlow
 import com.sherpa.interviewsherpa.comment.adaptor.out.persistence.entity.CommentJpaEntity;
 import com.sherpa.interviewsherpa.flow.adapter.out.persistence.entity.FlowJpaEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -51,14 +52,14 @@ public class MemberJpaEntity {
 	@Column(name = "profile_url")
 	private String profileURL;
 
-	@OneToMany(mappedBy = "member")
-	private List<MemberFlowRoleJpaEntity> memberFlowRoles = new ArrayList<>();
-
-	@OneToMany(mappedBy = "owner")
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<FlowJpaEntity> flows = new ArrayList<>();
 
-	@OneToMany(mappedBy = "owner")
+	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<CommentJpaEntity> comments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<MemberFlowRoleJpaEntity> memberFlowRoles = new ArrayList<>();
 
 	@CreatedDate
 	@Temporal(TemporalType.TIMESTAMP)

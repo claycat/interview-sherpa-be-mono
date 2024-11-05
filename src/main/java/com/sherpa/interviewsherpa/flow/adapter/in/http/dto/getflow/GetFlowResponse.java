@@ -1,6 +1,6 @@
 package com.sherpa.interviewsherpa.flow.adapter.in.http.dto.getflow;
 
-import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
+import com.sherpa.interviewsherpa.flow.domain.flowcontent.FlowContent;
 
-public record GetFlowResponse(Flow flow) {
+public record GetFlowResponse(FlowContent flowContent, String title) {
 }

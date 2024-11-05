@@ -7,6 +7,8 @@ import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowCo
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.getflow.GetFlowResult;
 import com.sherpa.interviewsherpa.flow.application.port.out.GetFlowPort;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class GetFlowService implements GetFlowUseCase {
 
@@ -17,8 +19,9 @@ public class GetFlowService implements GetFlowUseCase {
 	}
 
 	@Override
+	@Transactional
 	public GetFlowResult getFlow(GetFlowCommand command) {
-		var flow = getFlowPort.loadFlow(command.flowId());
-		return new GetFlowResult(flow);
+		var flow = getFlowPort.getFlow(command.flowId());
+		return new GetFlowResult(flow.getFlowContent(), flow.getTitle());
 	}
 }

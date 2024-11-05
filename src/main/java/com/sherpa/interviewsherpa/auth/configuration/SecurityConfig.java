@@ -4,6 +4,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -15,14 +17,20 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
-import lombok.RequiredArgsConstructor;
+import com.sherpa.interviewsherpa.auth.application.service.FlowAccessControlService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
+
+	private final FlowAccessControlService flowAccessControlService;
+
+	public SecurityConfig(FlowAccessControlService flowAccessControlService) {
+		this.flowAccessControlService = flowAccessControlService;
+	}
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -31,7 +39,7 @@ public class SecurityConfig {
 			.formLogin(AbstractHttpConfigurer::disable)
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/login", "/error", "/webjars/**", "/ws/**").permitAll()
+				.requestMatchers("/login", "/error", "/webjars/**", "/ws/**", "/flows/*/tokens/*").permitAll()
 				.anyRequest().authenticated()
 			)
 			.oauth2Login(oauth -> oauth
@@ -70,5 +78,12 @@ public class SecurityConfig {
 	public LogoutSuccessHandler logoutSuccessHandler() {
 		// Return HTTP 200 OK on successful logout without redirect
 		return new HttpStatusReturningLogoutSuccessHandler();
+	}
+
+	@Bean
+	public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+		DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+		handler.setPermissionEvaluator(new FlowPermissionEvaluator(flowAccessControlService));
+		return handler;
 	}
 }

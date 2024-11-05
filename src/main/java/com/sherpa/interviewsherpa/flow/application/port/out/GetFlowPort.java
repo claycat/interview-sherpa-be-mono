@@ -2,9 +2,9 @@ package com.sherpa.interviewsherpa.flow.application.port.out;
 
 import java.util.UUID;
 
-import com.sherpa.interviewsherpa.flow.domain.flow.Flow;
+import com.sherpa.interviewsherpa.flow.domain.Flow;
 
 public interface GetFlowPort {
-	Flow loadFlow(UUID flowId);
+	Flow getFlow(UUID flowId);
 
 }
