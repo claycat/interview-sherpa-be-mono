@@ -1,0 +1,60 @@
+plugins {
+	id 'java'
+}
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	//SPRING
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	//SECURITY
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	implementation("org.springframework.security:spring-security-oauth2-client")
+	implementation("org.springframework.security:spring-security-config")
+	implementation 'org.springframework.security:spring-security-oauth2-jose:6.3.3'
+	implementation 'org.springframework.security:spring-security-messaging:6.3.4'
+
+
+	//ETC
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+
+	//JWT
+	ext {
+		JJWT_VERSION = "0.12.5"
+	}
+	implementation "io.jsonwebtoken:jjwt-api:${JJWT_VERSION}"
+	runtimeOnly "io.jsonwebtoken:jjwt-gson:${JJWT_VERSION}"
+	runtimeOnly "io.jsonwebtoken:jjwt-impl:${JJWT_VERSION}"
+
+
+	// DATABASE
+	implementation 'org.flywaydb:flyway-core'
+	implementation 'org.flywaydb:flyway-mysql'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'com.h2database:h2'
+	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
+
+
+	//PROTOCOL
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+
+	//EXTERNAL
+	implementation 'io.github.sashirestela:simple-openai:3.9.0'
+}
+
+configurations.all {
+	exclude group: 'org.slf4j', module: 'slf4j-simple'
+}

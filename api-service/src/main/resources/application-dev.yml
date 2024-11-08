@@ -1,0 +1,62 @@
+spring:
+  config:
+    import: optional:file:./api-service/.env[.properties]
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:user;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database: h2
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, email, profile
+            authorization-grant-type: authorization_code
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+  
+  
+  flyway:
+    enabled: true
+
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-key-expiration-s: ${ACCESS_KEY_EXPIRATION_S}
+
+openai:
+  api-key: ${OPENAI_API_KEY}
+
+url:
+  client: ${CLIENT_URL}
+
+server:
+  port: ${DEV_PORT:8888}
+  servlet:
+    session:
+      timeout: 1h
+    context-path: /api

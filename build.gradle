@@ -1,68 +1,47 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+}
+
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.4'
+	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
 
-group = 'com.sherpa'
-version = '0.0.1-SNAPSHOT'
+bootJar {
+	enabled = false
+}
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+allprojects {
+	group = "sherpa"
+	version = "1.0.0-SNAPSHOT"
+	sourceCompatibility = '21'
+}
+
+subprojects {
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'java'
+
+
+	repositories {
+		mavenCentral()
 	}
-}
-
-repositories {
-	mavenCentral()
-}
-
-dependencies {
-
-	//SPRING
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-	//SECURITY
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	testImplementation 'org.springframework.security:spring-security-test'
-	implementation("org.springframework.security:spring-security-oauth2-client")
-	implementation("org.springframework.security:spring-security-config")
-	implementation 'org.springframework.security:spring-security-oauth2-jose:6.3.3'
-	implementation 'org.springframework.security:spring-security-messaging:6.3.4'
 
 
-	//ETC
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	implementation 'com.fasterxml.jackson.module:jackson-module-jakarta-xmlbind-annotations'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-
-
-	//JWT
-	ext {
-		JJWT_VERSION = "0.12.5"
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
+		}
 	}
-	implementation "io.jsonwebtoken:jjwt-api:${JJWT_VERSION}"
-	runtimeOnly "io.jsonwebtoken:jjwt-gson:${JJWT_VERSION}"
-	runtimeOnly "io.jsonwebtoken:jjwt-impl:${JJWT_VERSION}"
+
+	dependencies {
+	}
 
 
-	// DATABASE
-	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-mysql'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	runtimeOnly 'com.h2database:h2'
-	testImplementation 'com.h2database:h2'
-	implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.8.2'
-
-
-	//PROTOCOL
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
+	tasks.named('test') {
+		useJUnitPlatform()
+	}
 }
