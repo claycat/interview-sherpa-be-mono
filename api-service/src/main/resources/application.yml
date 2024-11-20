@@ -1,5 +1,5 @@
 spring:
   application:
-    name: interview-sherpa
+    name: interview-sherpa-api
   profiles:
     active: dev

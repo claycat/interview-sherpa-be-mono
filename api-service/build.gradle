@@ -7,6 +7,10 @@ repositories {
 
 
 dependencies {
+
+
+	implementation project(":common")
+
 	//SPRING
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -50,11 +54,6 @@ dependencies {
 	//PROTOCOL
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-
-	//EXTERNAL
-	implementation 'io.github.sashirestela:simple-openai:3.9.0'
-}
-
-configurations.all {
-	exclude group: 'org.slf4j', module: 'slf4j-simple'
+	//MQ
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 }

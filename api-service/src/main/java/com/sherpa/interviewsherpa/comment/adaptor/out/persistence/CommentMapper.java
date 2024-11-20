@@ -26,6 +26,8 @@ class CommentMapper {
 
 		return new CommentQueryModel(
 			commentJpaEntity.getId(),
+			commentJpaEntity.getCommentType(),
+			commentJpaEntity.getAiProvider(),
 			commentJpaEntity.getContent(),
 			commentJpaEntity.getOwner().getName(),
 			commentJpaEntity.getOwner().getProfileURL(),

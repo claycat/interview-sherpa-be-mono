@@ -2,3 +2,4 @@ rootProject.name = 'interview-sherpa-be-mono'
 
 include 'api-service'
 include 'ai-service'
+include 'common'

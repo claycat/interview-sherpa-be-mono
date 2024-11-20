@@ -49,7 +49,7 @@ public class MemberJpaEntity {
 	private String name;
 
 	@Setter
-	@Column(name = "profile_url")
+	@Column(name = "profile_url", length = 1024)
 	private String profileURL;
 
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

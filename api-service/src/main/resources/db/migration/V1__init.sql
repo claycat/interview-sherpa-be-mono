@@ -1,5 +1,8 @@
 CREATE TABLE members (
     member_id binary(16) not null,
+    email varchar(255) not null,
+    name varchar(255) not null,
+    profileURL varchar(500),
     created_at timestamp(6) not null,
     updated_at timestamp(6) not null,
     primary key (member_id)
@@ -71,6 +74,13 @@ CREATE TABLE comments
     content    TEXT      NOT NULL,
     created_at TIMESTAMP NOT NULL,
     updated_at TIMESTAMP NOT NULL,
+    comment_type ENUM(
+        'gpt-3',
+        'gpt-4',
+        'gpt-4o',
+        'gpt-4o-mini',
+        'user'
+    ),
 
     primary key (comment_id)
 );

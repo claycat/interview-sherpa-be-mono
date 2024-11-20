@@ -1,18 +1,9 @@
 package com.sherpa.interviewsherpa.comment.adaptor.in.websocket;
 
-import java.util.UUID;
-
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
-import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.PostCommentRequest;
-import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.PostCommentResponse;
 import com.sherpa.interviewsherpa.comment.application.port.in.GetCommentsUseCase;
 import com.sherpa.interviewsherpa.comment.application.port.in.PostCommentUseCase;
-import com.sherpa.interviewsherpa.comment.application.port.in.dto.PostCommentCommand;
-import com.sherpa.interviewsherpa.http.ApiResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,19 +27,20 @@ public class CommentWebSocketController {
 	// 	var result = getCommentsUseCase.getComments(command);
 	// 	return new GetCommentsResponse(result.comments());
 	// }
-
-	@MessageMapping("/flow/{flowId}/node/{nodeId}/comments/post")
-	@SendTo("/topic/flow/{flowId}/comments")
-	public ApiResponse<PostCommentResponse> postComment(
-		@DestinationVariable UUID flowId,
-		@DestinationVariable UUID nodeId,
-		PostCommentRequest request) {
-		var command = new PostCommentCommand(request.content(), flowId, request.memberId(), nodeId, request.parentId());
-		var result = postCommentUseCase.postComment(command);
-		return ApiResponse.wrap(
-			new PostCommentResponse(result.commentId(), result.memberId(), result.nodeId(), result.content(),
-				result.createdAt()));
-	}
+	//
+	// @MessageMapping("/flow/{flowId}/node/{nodeId}/comments/post")
+	// @SendTo("/topic/flow/{flowId}/comments")
+	// public ApiResponse<PostCommentResponse> postComment(
+	// 	@DestinationVariable UUID flowId,
+	// 	@DestinationVariable UUID nodeId,
+	// 	PostCommentRequest request) {
+	// 	var command = new PostCommentCommand(request.content(), flowId, request.memberId(), nodeId, request.parentId(),
+	// 		CommentType.USER);
+	// 	var result = postCommentUseCase.postComment(command);
+	// 	return ApiResponse.wrap(
+	// 		new PostCommentResponse(result.commentId(), result.memberId(), result.nodeId(), result.content(),
+	// 			result.createdAt()));
+	// }
 
 	// @MessageMapping("/comment/{commentId}/patch")
 	// @SendTo("/topic/comment/{commentId}")

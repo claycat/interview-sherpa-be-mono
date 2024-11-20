@@ -38,8 +38,16 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             user-name-attribute: sub
-  
-  
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 10
+
   flyway:
     enabled: true
 
@@ -48,8 +56,9 @@ jwt:
   secret-key: ${JWT_SECRET_KEY}
   access-key-expiration-s: ${ACCESS_KEY_EXPIRATION_S}
 
-openai:
-  api-key: ${OPENAI_API_KEY}
+logging:
+  level:
+    root: info
 
 url:
   client: ${CLIENT_URL}

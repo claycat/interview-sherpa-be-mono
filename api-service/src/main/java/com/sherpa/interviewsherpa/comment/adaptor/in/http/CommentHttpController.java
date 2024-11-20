@@ -18,6 +18,7 @@ import com.sherpa.interviewsherpa.comment.application.port.in.GetCommentsUseCase
 import com.sherpa.interviewsherpa.comment.application.port.in.PostCommentUseCase;
 import com.sherpa.interviewsherpa.comment.application.port.in.dto.GetCommentsCommand;
 import com.sherpa.interviewsherpa.comment.application.port.in.dto.PostCommentCommand;
+import com.sherpa.interviewsherpa.comment.constant.CommentType;
 import com.sherpa.interviewsherpa.http.ApiResponse;
 
 import jakarta.validation.Valid;
@@ -44,6 +45,8 @@ public class CommentHttpController {
 		List<GetCommentResponseDto> responseComments = result.comments().stream()
 			.map(comment -> new GetCommentResponseDto(
 				comment.id(),
+				comment.type(),
+				comment.provider(),
 				comment.parentId(),
 				comment.content(),
 				comment.author(),
@@ -61,11 +64,13 @@ public class CommentHttpController {
 		@PathVariable UUID nodeId,
 		@Valid @RequestBody PostCommentRequest request) {
 		var command = new PostCommentCommand(
+			request.question(),
 			request.content(),
 			flowId,
 			request.memberId(),
 			nodeId,
-			request.parentId()
+			request.parentId(),
+			CommentType.USER
 		);
 
 		var result = postCommentUseCase.postComment(command);

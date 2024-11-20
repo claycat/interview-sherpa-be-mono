@@ -8,12 +8,15 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.sherpa.interviewsherpa.comment.constant.CommentType;
 import com.sherpa.interviewsherpa.member.adapter.out.persistence.entity.MemberJpaEntity;
 
+import ai.AIModelProvider;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -38,6 +41,14 @@ public class CommentJpaEntity {
 	@UuidGenerator
 	@Column(name = "comment_id", nullable = false, updatable = false)
 	private UUID id;
+
+	@Enumerated
+	@Column(name = "comment_type", nullable = false)
+	private CommentType commentType;
+
+	@Enumerated
+	@Column(name = "ai_provider")
+	private AIModelProvider aiProvider;
 
 	@ManyToOne
 	@JoinColumn(name = "member_id", foreignKey = @ForeignKey(value = ConstraintMode.NO_CONSTRAINT))
@@ -78,10 +89,11 @@ public class CommentJpaEntity {
 	}
 
 	@Builder
-	public CommentJpaEntity(String content, UUID nodeId, UUID flowId) {
+	public CommentJpaEntity(String content, UUID nodeId, UUID flowId, CommentType commentType) {
 		this.flowId = flowId;
 		this.content = content;
 		this.nodeId = nodeId;
+		this.commentType = commentType;
 	}
 
 }
