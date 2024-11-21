@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: interview-sherpa
-  profiles:
-    active: dev

@@ -1,0 +1,33 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.3.2'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+
+	implementation project(":common")
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	//ETC
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	//EXTERNAL
+	implementation 'io.github.sashirestela:simple-openai:3.9.0'
+
+
+	//MQ
+	implementation 'org.springframework.boot:spring-boot-starter-amqp'
+}
+
+configurations.all {
+	exclude group: 'org.slf4j', module: 'slf4j-simple'
+}
