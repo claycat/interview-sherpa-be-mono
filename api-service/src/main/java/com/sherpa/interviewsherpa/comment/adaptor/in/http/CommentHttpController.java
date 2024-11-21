@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +23,9 @@ import com.sherpa.interviewsherpa.comment.constant.CommentType;
 import com.sherpa.interviewsherpa.http.ApiResponse;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 public class CommentHttpController {
 
@@ -35,6 +38,7 @@ public class CommentHttpController {
 	}
 
 	@GetMapping("/flows/{flowId}/nodes/{nodeId}/comments")
+	@PreAuthorize("hasPermission(#flowId, 'VIEW_FLOW') || @flowAccessTokenService.isValidToken(#token, 'VIEW_FLOW', #flowId)")
 	public ResponseEntity<ApiResponse<GetCommentResponse>> getComments(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId) {
@@ -59,10 +63,13 @@ public class CommentHttpController {
 	}
 
 	@PostMapping("/flows/{flowId}/nodes/{nodeId}/comments")
+	@PreAuthorize("hasPermission(#flowId, 'COMMENT_FLOW') || @flowAccessTokenService.isValidToken(#token, 'COMMENT_FLOW', #flowId)")
 	public ResponseEntity<ApiResponse<PostCommentResponse>> postComment(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId,
 		@Valid @RequestBody PostCommentRequest request) {
+
+		log.info("Member {} posting comment on node {} on flow {}", request.memberId(), nodeId, flowId);
 		var command = new PostCommentCommand(
 			request.question(),
 			request.content(),
