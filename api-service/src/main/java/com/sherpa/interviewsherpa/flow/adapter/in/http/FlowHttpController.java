@@ -28,6 +28,10 @@ import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFl
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.patchflow.PatchFlowTitleCommand;
 import com.sherpa.interviewsherpa.http.ApiResponse;
 
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/flows")
 public class FlowHttpController {
@@ -46,7 +50,8 @@ public class FlowHttpController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ApiResponse<CreateFlowResponse>> createFlow(@RequestBody CreateFlowRequest request) {
+	public ResponseEntity<ApiResponse<CreateFlowResponse>> createFlow(@Valid @RequestBody CreateFlowRequest request) {
+		log.info("Member {} creating flow", request.getMemberId());
 		var createFlowCommand = request.toCommand();
 		var createFlowResult = createFlowUseCase.createFlow(createFlowCommand);
 		var response = new CreateFlowResponse(createFlowResult.getFlowId());
@@ -60,6 +65,7 @@ public class FlowHttpController {
 		@RequestBody PatchFlowRequest request,
 		@RequestParam(required = false) UUID token
 	) {
+		log.info("Member {} updating flow {}", request.memberId(), flowId);
 		var command = new PatchFlowCommand(flowId, request.flowContent());
 		patchFlowUseCase.patchFlow(command);
 		return ResponseEntity.ok(ApiResponse.wrap(null));
@@ -92,6 +98,7 @@ public class FlowHttpController {
 	@DeleteMapping("/{flowId}")
 	@PreAuthorize("hasPermission(#flowId, 'DELETE_FLOW')")
 	public ResponseEntity<?> deleteFlow(@PathVariable UUID flowId) {
+		log.info("Deleting flow {}", flowId);
 		deleteFlowUseCase.deleteFlow(flowId);
 		return ResponseEntity.ok(ApiResponse.wrap(null));
 	}

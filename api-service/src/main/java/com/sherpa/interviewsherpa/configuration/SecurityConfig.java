@@ -41,7 +41,8 @@ public class SecurityConfig {
 			.httpBasic(AbstractHttpConfigurer::disable)
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/login", "/error", "/webjars/**", "/ws/**", "/flows/*/tokens/*").permitAll()
-				.anyRequest().authenticated()
+				.requestMatchers("/flows", "/signin/success").authenticated()
+				.anyRequest().permitAll()
 			)
 			.oauth2Login(oauth -> oauth
 				.defaultSuccessUrl("/signin/success", true)

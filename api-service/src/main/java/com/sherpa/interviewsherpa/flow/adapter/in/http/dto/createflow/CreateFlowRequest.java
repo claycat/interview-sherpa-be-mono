@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.sherpa.interviewsherpa.flow.application.port.in.dto.createflow.CreateFlowCommand;
 import com.sherpa.interviewsherpa.flow.domain.flowcontent.FlowContent;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,8 +15,11 @@ import lombok.ToString;
 @NoArgsConstructor(force = true)
 public class CreateFlowRequest {
 
+	@NotNull
 	private final UUID memberId;
+
 	private final FlowContent flowContent;
+	
 	private final String title;
 
 	public CreateFlowRequest(UUID memberId, FlowContent flowContent, String title) {
