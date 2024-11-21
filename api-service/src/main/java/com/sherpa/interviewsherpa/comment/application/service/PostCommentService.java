@@ -44,7 +44,10 @@ public class PostCommentService implements PostCommentUseCase {
 			command.question(),
 			command.content()
 		);
-		aiEvaluationRequestPublisher.publishAiEvaluationRequest(aiEvaluationRequest);
+
+		if (command.requestAIEvaluation()) {
+			aiEvaluationRequestPublisher.publishAiEvaluationRequest(aiEvaluationRequest);
+		}
 
 		return new PostCommentResult(newComment.getId(), newComment.getOwnerId(), newComment.getNodeId(),
 			newComment.getContent(), newComment.getCreatedAt());

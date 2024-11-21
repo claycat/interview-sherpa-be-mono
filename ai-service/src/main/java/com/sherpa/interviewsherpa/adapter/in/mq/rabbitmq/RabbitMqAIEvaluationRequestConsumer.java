@@ -24,6 +24,7 @@ public class RabbitMqAIEvaluationRequestConsumer implements AIEvaluationRequestC
 	@Override
 	@RabbitListener(queues = RabbitMQConfig.EVALUATION_REQUEST_QUEUE)
 	public void consumeAIEvaluationRequest(AIEvaluationRequest request) {
+		log.info("Consumed AI evaluation request: {}", request);
 		var command = new AIEvaluationCommand(
 			request.commentId(),
 			request.flowId(),
@@ -31,6 +32,5 @@ public class RabbitMqAIEvaluationRequestConsumer implements AIEvaluationRequestC
 			request.answer()
 		);
 		aiEvaluationUseCase.evaluate(command);
-		log.info("Consumed AI evaluation request: {}", request);
 	}
 }

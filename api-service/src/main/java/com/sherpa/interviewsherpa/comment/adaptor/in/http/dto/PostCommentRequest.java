@@ -16,6 +16,9 @@ public record PostCommentRequest(
 	@NotNull(message = "Member ID must not be null")
 	UUID memberId,
 
+	@NotNull
+	Boolean requestAIEvaluation,
+
 	UUID parentId
 ) {
 }

@@ -18,8 +18,8 @@ public class GetFlowMemberRoleService implements GetFlowMemberRoleUseCase {
 
 	@Override
 	public GetFlowMemberRoleResult getFlowMemberRole(GetFlowMemberRoleCommand command) {
-		var memberFlowRole = getMemberFlowRolePort.getMemberFlowRole(command.flowId(), command.memberId());
-		return new GetFlowMemberRoleResult(memberFlowRole.getRole().name());
+		var optionalRole = getMemberFlowRolePort.getMemberFlowRole(command.flowId(), command.memberId())
+			.map(memberFlowRole -> memberFlowRole.getRole().name());
+		return new GetFlowMemberRoleResult(optionalRole);
 	}
-
 }

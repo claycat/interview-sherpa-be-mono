@@ -52,7 +52,7 @@ public class CommentPersistenceSaveAdapter implements SaveCommentPort {
 				.orElseThrow(() -> new CommentNotFoundException(parentId));
 		}
 
-		var commentJpaEntity = new CommentJpaEntity(content, nodeId, flowId, commentType);
+		var commentJpaEntity = new CommentJpaEntity(content, nodeId, flowId, commentType, provider);
 		commentJpaEntity.setOwner(owner);
 
 		if (parentCommentJpaEntity != null) {

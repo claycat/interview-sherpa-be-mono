@@ -70,6 +70,7 @@ public class CommentHttpController {
 			request.memberId(),
 			nodeId,
 			request.parentId(),
+			request.requestAIEvaluation(),
 			CommentType.USER
 		);
 

@@ -89,11 +89,13 @@ public class CommentJpaEntity {
 	}
 
 	@Builder
-	public CommentJpaEntity(String content, UUID nodeId, UUID flowId, CommentType commentType) {
+	public CommentJpaEntity(String content, UUID nodeId, UUID flowId, CommentType commentType,
+		AIModelProvider provider) {
 		this.flowId = flowId;
 		this.content = content;
 		this.nodeId = nodeId;
 		this.commentType = commentType;
+		this.aiProvider = provider;
 	}
 
 }

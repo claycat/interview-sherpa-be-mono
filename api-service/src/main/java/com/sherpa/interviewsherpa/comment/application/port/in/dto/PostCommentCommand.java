@@ -14,6 +14,7 @@ public record PostCommentCommand(
 	UUID memberId,
 	UUID nodeId,
 	UUID parentId,
+	Boolean requestAIEvaluation,
 	CommentType commentType
 ) {
 }
