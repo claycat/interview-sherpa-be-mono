@@ -50,6 +50,7 @@ spring:
 
   flyway:
     enabled: true
+    cleanDisabled: false
 
 
 jwt:

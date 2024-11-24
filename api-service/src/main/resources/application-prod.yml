@@ -41,7 +41,6 @@ spring:
 
   flyway:
     enabled: true
-    cleanDisabled: false
 
 
 
