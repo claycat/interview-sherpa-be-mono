@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: interview-sherpa-api
+  datasource:
+    url: jdbc:h2:mem:user;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    database: h2
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+    hibernate:
+      ddl-auto: create
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: client-id
+            client-secret: client-secret
+            scope: openid, email, profile
+            authorization-grant-type: authorization_code
+            redirect-uri: redirect-uri
+
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 10
+
+url:
+  client: localhost:3000
+
+
+jwt:
+  secret-key: d3f38a66b47755d7858e0b70bde076bb9ee50dc6f84351dbab1816d81d3f55be138d8a3d083d739e90874becfc99cc1f76c6de6cd9a92ce53bfbfa6dfd481bc7
+  access-key-expiration-s: 1000

@@ -1,0 +1,20 @@
+spring:
+  profiles:
+    active: test
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: user
+    password: password
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 10
+        default-requeue-rejected: false
+
+
+openai:
+  api-key: openai-key
+  model: gpt-4o-mini
+
+
