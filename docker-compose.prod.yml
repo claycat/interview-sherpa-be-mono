@@ -101,7 +101,7 @@ services:
       - common-network
 
   frontend:
-    image: sherpa-fe:latest
+    image: ghcr.io/claycat/sherpa-fe:latest
     container_name: sherpa-fe
     ports:
       - "3000:80"
