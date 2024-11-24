@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "${PROD_RABBITMQ_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    networks:
+      - common-network
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  mysql:
+    image: mysql:8.0.33
+    container_name: mysql
+    ports:
+      - "${PROD_MYSQL_PORT:-43306}:3306"
+    expose:
+      - 3306
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+      - ./db/mysql/init:/docker-entrypoint-initdb.d
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    restart: unless-stopped
+    networks:
+      - common-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    container_name: nginx
+    ports:
+      - "${NGINX_PORT}:${NGINX_PORT}"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf
+      - ../frontend/build:/usr/share/nginx/html
+    depends_on:
+      - api-service
+      - ai-service
+      - frontend
+    networks:
+      - common-network
+
+
+
+  api-service:
+    build:
+      context: .
+      dockerfile: api-service/Dockerfile
+    container_name: api-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "${API_PROD_PORT}:8888"
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - common-network
+
+
+  ai-service:
+    build:
+      context: .
+      dockerfile: ai-service/Dockerfile
+    container_name: ai-service
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    ports:
+      - "${AI_PROD_PORT}:8030"
+    env_file:
+      - .env
+    depends_on:
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - common-network
+
+  frontend:
+    image: sherpa-fe:latest
+    container_name: sherpa-fe
+    ports:
+      - "3000:80"
+    networks:
+      - common-network
+    depends_on:
+      - api-service
+      - ai-service
+
+networks:
+  common-network:
+    driver: bridge

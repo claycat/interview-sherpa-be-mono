@@ -32,10 +32,15 @@ public class AIMemberInitializer implements CommandLineRunner {
 	@Override
 	public void run(String... args) {
 
+		if (memberRepository.findByEmail(OPENAI_MEMBER_EMAIL).isPresent()) {
+			log.info("AI Member {} already exists", OPENAI_MEMBER_EMAIL);
+			return;
+		}
+
 		MemberJpaEntity gptJpaEntity = new MemberJpaEntity(
 			OPENAI_MEMBER_EMAIL,
 			"ChatGPT",
-			"https://private-user-images.githubusercontent.com/53655119/387219880-2278abb1-0cc8-47be-977f-e4a84f9c2a3b.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MzE5MzQyMjMsIm5iZiI6MTczMTkzMzkyMywicGF0aCI6Ii81MzY1NTExOS8zODcyMTk4ODAtMjI3OGFiYjEtMGNjOC00N2JlLTk3N2YtZTRhODRmOWMyYTNiLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDExMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQxMTE4VDEyNDUyM1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTBjOGE4OGExMDNlMDEyZTMyZDgzMjQ2NjdiZmJmYTIwMjEwMzFlOWQ1YjMyNmIyY2VjN2Q5YjI2YTMwOGRlYjQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.AyUFKDofh5OFuQ6p--GWzXP7aVnqXh8d2Z0KUaU08co"
+			"https://i.imgur.com/J6m10BI.png"
 		);
 
 		memberRepository.save(gptJpaEntity);

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sherpa.interviewsherpa.comment.adaptor.in.http.dto.GetCommentResponse;
@@ -41,7 +43,9 @@ public class CommentHttpController {
 	@PreAuthorize("hasPermission(#flowId, 'VIEW_FLOW') || @flowAccessTokenService.isValidToken(#token, 'VIEW_FLOW', #flowId)")
 	public ResponseEntity<ApiResponse<GetCommentResponse>> getComments(
 		@PathVariable UUID flowId,
-		@PathVariable UUID nodeId) {
+		@PathVariable UUID nodeId,
+		@RequestParam(required = false) UUID token
+	) {
 
 		var command = new GetCommentsCommand(flowId, nodeId);
 		var result = getCommentsUseCase.getComments(command);
@@ -67,7 +71,9 @@ public class CommentHttpController {
 	public ResponseEntity<ApiResponse<PostCommentResponse>> postComment(
 		@PathVariable UUID flowId,
 		@PathVariable UUID nodeId,
-		@Valid @RequestBody PostCommentRequest request) {
+		@Valid @RequestBody PostCommentRequest request,
+		@RequestHeader(value = "flow-token", required = false) UUID token
+	) {
 
 		log.info("Member {} posting comment on node {} on flow {}", request.memberId(), nodeId, flowId);
 		var command = new PostCommentCommand(

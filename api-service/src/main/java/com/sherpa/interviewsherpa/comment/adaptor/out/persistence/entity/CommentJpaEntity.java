@@ -16,6 +16,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
+import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Id;
@@ -42,11 +43,11 @@ public class CommentJpaEntity {
 	@Column(name = "comment_id", nullable = false, updatable = false)
 	private UUID id;
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(name = "comment_type", nullable = false)
 	private CommentType commentType;
 
-	@Enumerated
+	@Enumerated(EnumType.STRING)
 	@Column(name = "ai_provider")
 	private AIModelProvider aiProvider;
 

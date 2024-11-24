@@ -2,4 +2,4 @@ spring:
   application:
     name: interview-sherpa-api
   profiles:
-    active: dev
+    active: test
