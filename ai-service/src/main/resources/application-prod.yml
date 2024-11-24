@@ -2,10 +2,10 @@ spring:
   config:
     import: optional:file:.env[.properties]
     activate:
-      on-profile: dev
+      on-profile: prod
   rabbitmq:
-    host: localhost
-    port: 5672
+    host: ${PROD_RABBITMQ_HOST}
+    port: ${PROD_RABBITMQ_PORT}
     username: ${RABBITMQ_USERNAME}
     password: ${RABBITMQ_PASSWORD}
     listener:
@@ -25,4 +25,4 @@ logging:
     root: info
 
 server:
-  port: ${AI_DEV_PORT:8888}
+  port: ${AI_PROD_PORT:8888}

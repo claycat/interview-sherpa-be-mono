@@ -1,13 +1,67 @@
 spring:
   config:
-    import: optional:file./authorization-service/.env[.properties]
+    import: optional:file:.env[.properties]
     activate:
       on-profile: prod
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/user?serverTimeZone=Asia/Seoul
-    username: ${MYSQL_USERNAME}
-    password: ${MYSQL_PASSWORD}
+    url: jdbc:mysql://${PROD_MYSQL_HOST}:${PROD_MYSQL_PORT}/${MYSQL_DATABASE}?serverTimeZone=Asia/Seoul
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: openid, email, profile
+            authorization-grant-type: authorization_code
+            redirect-uri: ${GOOGLE_REDIRECT_URI}
+
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/v2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
+            user-name-attribute: sub
+
+  rabbitmq:
+    host: ${PROD_RABBITMQ_HOST}
+    port: ${PROD_RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 10
+
+  flyway:
+    enabled: true
+
+
+
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-key-expiration-s: ${ACCESS_KEY_EXPIRATION_S}
+
+logging:
+  level:
+    root: info
+
+url:
+  client: ${CLIENT_URL}
+
+
+
+
 server:
-  port: ${PROD_PORT:8020}
+  port: ${API_PROD_PORT:8888}
+  servlet:
+    session:
+      timeout: 1h
+    context-path: /api

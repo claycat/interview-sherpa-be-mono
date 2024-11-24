@@ -2,24 +2,14 @@ spring:
   config:
     import: optional:file:.env[.properties]
     activate:
-      on-profile: dev
+      on-profile: test
+
   datasource:
-    url: jdbc:h2:mem:user;MODE=MYSQL;DATABASE_TO_LOWER=TRUE
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    database: h2
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        format_sql: true
-    hibernate:
-      ddl-auto: create
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST}:${PROD_MYSQL_PORT}/${MYSQL_DATABASE}?serverTimeZone=Asia/Seoul
+    username: ${MYSQL_ROOT_USERNAME}
+    password: ${MYSQL_ROOT_PASSWORD}
+
 
   security:
     oauth2:
@@ -38,11 +28,12 @@ spring:
             token-uri: https://oauth2.googleapis.com/token
             user-info-uri: https://openidconnect.googleapis.com/v1/userinfo
             user-name-attribute: sub
+
   rabbitmq:
-    host: localhost
-    port: 5672
-    username: user
-    password: password
+    host: ${RABBITMQ_HOST}
+    port: ${RABBITMQ_PORT}
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
     listener:
       simple:
         concurrency: 3
@@ -50,7 +41,8 @@ spring:
 
   flyway:
     enabled: true
-    cleanDisabled: false
+
+
 
 
 jwt:

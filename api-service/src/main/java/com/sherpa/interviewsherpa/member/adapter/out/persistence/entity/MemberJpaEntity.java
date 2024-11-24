@@ -45,7 +45,7 @@ public class MemberJpaEntity {
 	private String email;
 
 	@Setter
-	@Column(name = "name")
+	@Column(name = "name", nullable = false)
 	private String name;
 
 	@Setter
