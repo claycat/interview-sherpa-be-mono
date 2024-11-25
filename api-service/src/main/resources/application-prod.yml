@@ -54,7 +54,7 @@ logging:
     root: info
 
 url:
-  client: ${CLIENT_URL}
+  client: ${PROD_CLIENT_URL}
 
 
 

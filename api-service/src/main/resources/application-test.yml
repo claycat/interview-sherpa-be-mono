@@ -54,7 +54,7 @@ logging:
     root: info
 
 url:
-  client: ${CLIENT_URL}
+  client: ${DEV_CLIENT_URL}
 
 server:
   port: ${API_DEV_PORT:8888}

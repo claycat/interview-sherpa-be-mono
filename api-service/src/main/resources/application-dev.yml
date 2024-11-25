@@ -41,8 +41,8 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: user
-    password: password
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
     listener:
       simple:
         concurrency: 3
@@ -62,7 +62,7 @@ logging:
     root: info
 
 url:
-  client: ${CLIENT_URL}
+  client: ${DEV_CLIENT_URL}
 
 server:
   port: ${API_DEV_PORT:8888}
