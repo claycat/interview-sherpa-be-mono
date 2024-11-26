@@ -52,6 +52,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
     depends_on:
       - api-service
       - ai-service
@@ -59,6 +62,13 @@ services:
       - common-network
 
 
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
 
   api-service:
     build:

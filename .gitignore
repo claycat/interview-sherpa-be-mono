@@ -39,3 +39,8 @@ out/
 ### Secret ###
 .env
 /db/
+
+### Nginx ###
+/nginx/*
+!/nginx/Dockerfile
+!/nginx/nginx.conf

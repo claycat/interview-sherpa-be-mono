@@ -30,7 +30,7 @@ spring:
             client-secret: ${GOOGLE_CLIENT_SECRET}
             scope: openid, email, profile
             authorization-grant-type: authorization_code
-            redirect-uri: ${GOOGLE_REDIRECT_URI}
+            redirect-uri: ${DEV_GOOGLE_REDIRECT_URI}
 
         provider:
           google:
